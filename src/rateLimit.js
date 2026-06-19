@@ -1,3 +1,7 @@
+// In-memory, per-process token bucket. Correct for a single instance only.
+// Concurrent instances each keep their own `buckets` map, so the effective
+// limit becomes RATE * instanceCount. For multi-instance deployments this
+// must move to a shared store (Redis INCR + EXPIRE) — see SCALE.md.
 const RATE = Number(process.env.RATE_LIMIT_PER_MIN || 5);
 const WINDOW_MS = 60_000;
 const buckets = new Map();
